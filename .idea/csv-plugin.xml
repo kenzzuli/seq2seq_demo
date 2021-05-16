@@ -24,6 +24,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/sentence_sequence.py">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/seq2seq.py">
           <value>
             <Attribute>

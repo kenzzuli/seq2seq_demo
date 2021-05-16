@@ -23,41 +23,41 @@ class Sen2Seq(object):
     def __len__(self):
         return len(self.dict)
 
-    def sen2seq(self, str_list: list, seq_len: int, add_eos=False) -> list:
+    def sen2seq(self, sentence: list, seq_len: int, add_eos=False) -> list:
         """
         将句子转成序列
         训练时，特征值中不需要eos，目标值中需要eos
         如果不需要eos，返回的结果长度为seq_len
         如果需要eos，返回的结果长度为seq_len+1
         结构为 数字字符 + (EOS) + PAD
-        :param str_list: 单词组成的列表，即句子
+        :param sentence: 单词组成的列表，即句子
         :param seq_len: 指定序列长度，可能要对句子进行删减或填充
         :param add_eos: 是否添加eos标记
         """
         res_list = []
-        if len(str_list) > seq_len:
-            res_list += str_list[:seq_len]
+        if len(sentence) > seq_len:  # 如果句子长度大于seq_len，裁剪
+            res_list += sentence[:seq_len]
             if add_eos:
                 res_list += [self.EOS_TAG]
         else:
-            res_list += str_list
+            res_list += sentence
             if add_eos:
                 res_list += [self.EOS_TAG]
-                res_list += [self.PAD_TAG] * (seq_len + 1 - len(res_list))
+                res_list += [self.PAD_TAG] * (seq_len + 1 - len(res_list))  # 如果句子长度小于seq_len，填充
             else:
                 res_list += [self.PAD_TAG] * (seq_len - len(res_list))
         # 如果词表中不存在某个token，将该token对应的索引换成UNK_TAG对应的索引
         res_list = [self.dict.get(token, self.dict[self.UNK_TAG]) for token in res_list]
         return res_list
 
-    def seq2sen(self, seq: list) -> list:
+    def seq2sen(self, sequence: list) -> list:
         """
         将序列转成句子
-        :param seq: 序列
+        :param sequence: 序列
         :return: 句子
         """
         # 如果词表中不存在某个索引，将该索引对应的token替换为UNK_TAG
-        return [self.inverse_dict.get(index, self.UNK_TAG) for index in seq]
+        return [self.inverse_dict.get(index, self.UNK_TAG) for index in sequence]
 
 
 if __name__ == '__main__':
