@@ -11,14 +11,14 @@ import random
 class Decoder(nn.Module):
     def __init__(self):
         super().__init__()
-        self.embedding = nn.Embedding(num_embeddings=len(config.n2q),
+        self.embedding = nn.Embedding(num_embeddings=len(config.sen2seq),
                                       embedding_dim=config.embedding_dim,
                                       padding_idx=config.padding_index)
         self.gru = nn.GRU(input_size=config.embedding_dim, hidden_size=config.hidden_size,
                           num_layers=config.num_layers, batch_first=config.batch_first,
                           dropout=config.drop_out, bidirectional=config.bidirectional)
         # 经过全连接层，将[batch_size, hidden_size*num_directions] 转成 [batch_size, vocab_size]
-        self.fc = nn.Linear(in_features=config.hidden_size * config.num_directions, out_features=len(config.n2q))
+        self.fc = nn.Linear(in_features=config.hidden_size * config.num_directions, out_features=len(config.sen2seq))
 
     def forward(self, encoder_hidden, target):
         """

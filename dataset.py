@@ -22,8 +22,8 @@ class NumDataset(Dataset):
         feature_length = len(feature)
         target_length = len(target)
         # 将feature和target转成序列
-        feature = config.n2q.sen2seq(feature, seq_len=config.seq_len)
-        target = config.n2q.sen2seq(target, seq_len=config.seq_len, add_eos=True)
+        feature = config.sen2seq.sen2seq(feature, seq_len=config.seq_len)
+        target = config.sen2seq.sen2seq(target, seq_len=config.seq_len, add_eos=True)
         return feature, target, feature_length, target_length
 
     def __len__(self):
@@ -63,10 +63,10 @@ if __name__ == '__main__':
     for feature, target, feature_length, target_length in train_dataloader:
         print(feature)
         # for i in feature:
-        #     print(config.n2q.index2str(i))
+        #     print(config.sen2seq.index2str(i))
         print(target.size())
         # for i in target:
-        #     print(config.n2q.index2str(i))
+        #     print(config.sen2seq.index2str(i))
         print(feature_length)
         print(target_length)
         break

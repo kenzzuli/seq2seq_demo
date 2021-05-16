@@ -8,7 +8,7 @@ import config
 class Encoder(nn.Module):
     def __init__(self):
         super().__init__()
-        self.embed = nn.Embedding(num_embeddings=len(config.n2q),
+        self.embed = nn.Embedding(num_embeddings=len(config.sen2seq),
                                   embedding_dim=config.embedding_dim,
                                   padding_idx=config.padding_index)
         self.gru = nn.GRU(input_size=config.embedding_dim, hidden_size=config.hidden_size,
