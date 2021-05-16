@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/num_sequence.py">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/opt/anaconda3/envs/nlp/lib/python3.6/site-packages/torch/nn/modules/rnn.py">
           <value>
             <Attribute>

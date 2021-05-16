@@ -1,7 +1,7 @@
-from num_sequence import Num2Seq
+from sentence_sequence import Sen2Seq
 import torch
 
-n2q = Num2Seq()
+n2q = Sen2Seq()
 seq_len = 10
 train_batch_size = 512
 test_batch_size = 512

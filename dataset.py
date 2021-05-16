@@ -11,6 +11,7 @@ class NumDataset(Dataset):
     def __init__(self, seed=6):
         # 使用numpy随机造一堆数字
         np.random.seed(seed)
+        # 随机数的范围是[0, 1e8) 数量为50000个
         self.data = np.random.randint(0, 1e8, [50000])
 
     def __getitem__(self, index):
@@ -21,8 +22,8 @@ class NumDataset(Dataset):
         feature_length = len(feature)
         target_length = len(target)
         # 将feature和target转成序列
-        feature = config.n2q.str2index(feature, seq_len=config.seq_len)
-        target = config.n2q.str2index(target, seq_len=config.seq_len, add_eos=True)
+        feature = config.n2q.sen2seq(feature, seq_len=config.seq_len)
+        target = config.n2q.sen2seq(target, seq_len=config.seq_len, add_eos=True)
         return feature, target, feature_length, target_length
 
     def __len__(self):
@@ -48,6 +49,7 @@ def collate_fn(batch):
     """
     # 先对batch依据target_length从大到小排序
     batch = sorted(batch, key=lambda x: x[3], reverse=True)
+    # 先对batch拆包，变成多个元组对象，然后从每个元组中取第一个元素组成元组作为zip的第一个元素，相当于矩阵的转置
     feature, target, feature_length, target_length = list(zip(*batch))
     feature = torch.LongTensor(feature)
     target = torch.LongTensor(target)
