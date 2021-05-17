@@ -24,6 +24,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/encoder.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/num_sequence.py">
           <value>
             <Attribute>

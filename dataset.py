@@ -50,7 +50,7 @@ def collate_fn(batch):
     # 先对batch依据target_length从大到小排序
     batch = sorted(batch, key=lambda x: x[3], reverse=True)
     # 先对batch拆包，变成多个元组对象，然后从每个元组中取第一个元素组成元组作为zip的第一个元素，相当于矩阵的转置
-    feature, target, feature_length, target_length = list(zip(*batch))
+    feature, target, feature_length, target_length = zip(*batch)
     feature = torch.LongTensor(feature)
     target = torch.LongTensor(target)
     feature_length = torch.LongTensor(feature_length)

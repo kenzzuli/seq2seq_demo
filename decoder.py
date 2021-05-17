@@ -45,13 +45,14 @@ class Decoder(nn.Module):
             use_teacher_forcing = random.random() < config.teacher_forcing_ratio
             if use_teacher_forcing:
                 # 下一次的输入使用真实值
-                decoder_input = target[:, i].unsqueeze(1)  # [batch_size,1]
+                decoder_input = target[:, i].unsqueeze(1)  # 增加一个维度，由[batch_size,]变成[batch_size,1]
             else:
                 # 获取最后一个维度中最大值所在的位置，即确定是哪一个字符，以此作为下一个时间步的输入
                 # 模型最开始也不知道哪个位置对应哪个字符，通过训练，慢慢调整，才知道的
                 decoder_input = torch.argmax(decoder_output, dim=-1, keepdim=True)  # [batch_size, 1]
             # 5. 把前一次的hidden_state作为当前时间步的hidden_state，把前一次的输出作为当前时间步的输入
             # 6. 循环4-5
+        # 将outputs列表在第0个维度累加
         outputs = torch.stack(outputs, dim=0)  # [seq_len, batch_size, vocab_size]
         return outputs
 
@@ -71,7 +72,7 @@ class Decoder(nn.Module):
         # 将output的第0个维度去掉
         output = output.squeeze(0)  # [batch_size, hidden_size*num_directions]
         output = self.fc(output)  # [batch_size, vocab_size]
-        output = F.log_softmax(output, dim=-1)  # 取概率
+        output = F.log_softmax(output, dim=-1)  # 取概率 [batch_size, vocab_size]
         return output, decoder_hidden
 
     def evaluation(self, encoder_hidden):
@@ -90,3 +91,19 @@ class Decoder(nn.Module):
             decoder_input = torch.argmax(decoder_output, dim=-1, keepdim=True)
         outputs = torch.stack(outputs, dim=0)
         return outputs
+
+
+if __name__ == '__main__':
+    from dataset import get_dataloader
+    from encoder import Encoder
+
+    train_dataloader = get_dataloader()
+    encoder = Encoder()
+    decoder = Decoder()
+    print(encoder)
+    print(decoder)
+    for feature, target, feature_length, target_length in train_dataloader:
+        output, encoder_hidden = encoder(feature, feature_length)
+        result = decoder(encoder_hidden, target)
+        print(result.size())
+        break

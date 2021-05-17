@@ -6,8 +6,8 @@
 class Sen2Seq(object):
     UNK_TAG = "UNK"  # 未知
     PAD_TAG = "PAD"  # 填充
-    SOS_TAG = "SOS"  # 开始
-    EOS_TAG = "EOS"  # 结束
+    SOS_TAG = "SOS"  # 句子开始
+    EOS_TAG = "EOS"  # 句子结束
 
     def __init__(self):
         # 构造str->index的字典

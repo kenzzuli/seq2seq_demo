@@ -1,4 +1,4 @@
-from sentence_sequence import Sen2Seq
+from sentence2sequence import Sen2Seq
 import torch
 
 # 实例化一个sen2seq
