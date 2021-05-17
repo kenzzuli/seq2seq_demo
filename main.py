@@ -35,7 +35,7 @@ def train():
                 # print(y_predict.size(), y_predict.type())
                 target = target.reshape(target.size(0) * target.size(1))  # [batch_size*seq_len]
                 # print(target.size(), target.type())
-                loss = F.nll_loss(y_predict, target)
+                loss = F.nll_loss(y_predict, target, ignore_index=config.pad_index)
                 loss.backward()
                 optimizer.step()
                 t.set_postfix(loss=loss.item())  # 设置后缀
@@ -102,6 +102,6 @@ def predict():
 
 
 if __name__ == '__main__':
-    # train()
-    # eval()
+    train()
+    eval()
     predict()
