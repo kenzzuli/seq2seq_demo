@@ -62,6 +62,8 @@ def eval():
                 y_predict = y_predict.permute(1, 0, 2)  # [batch_size, seq_len, vocab_size]
                 # 准确率
                 pred = y_predict.argmax(dim=-1)  # [batch_size, seq_len]
+                # 在decoder中，如果使用while循环，可能得到的结果比target短
+                target = target[:, :pred.size(1)]
                 # eq会生成[batch_size, seq_len]的布尔矩阵 all是只有一行全为true时，才会返回true，形状为[batch_size]
                 correct += pred.eq(target).all(dim=-1).sum()
                 # 损失
@@ -76,6 +78,30 @@ def eval():
         print("Avg Loss:{}\tAccuracy:{}%".format(loss, acc))
 
 
+def predict():
+    s2s.eval()
+    sentence = input("请输入句子: ")
+    # 句子转序列
+    feature = config.sen2seq.sen2seq(list(sentence), 10)
+    # 构造feature和feature——length
+    feature = torch.LongTensor(feature).to(config.device).unsqueeze(0)
+    feature_length = torch.LongTensor([len(sentence)]).to(config.device)
+    # 预测
+    y_predict = s2s.evaluate(feature, feature_length)
+    # 转换
+    y_predict = y_predict.permute(1, 0, 2)
+    # 取最后一个维度的最大值作为预测的结果
+    pred = y_predict.argmax(dim=-1)
+    # 转成列表
+    pred = pred.squeeze().detach().numpy().tolist()
+    # 转成句子
+    pred = config.sen2seq.seq2sen(pred)
+    # 拼接
+    pred = "".join(pred).split("EOS")[0]
+    print("预测结果为:", pred)
+
+
 if __name__ == '__main__':
-    train()
-    eval()
+    # train()
+    # eval()
+    predict()

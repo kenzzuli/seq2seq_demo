@@ -85,10 +85,18 @@ class Decoder(nn.Module):
         batch_size = encoder_hidden.size(1)  # 获取batch_size,构造初始的decoder_input
         decoder_input = torch.LongTensor([[config.sos_index]] * batch_size).to(config.device)
         outputs = []
-        for i in range(config.seq_len + 1):
+
+        while True:
             decoder_output, decoder_hidden = self.forward_step(decoder_input, decoder_hidden)
             outputs.append(decoder_output)
             decoder_input = torch.argmax(decoder_output, dim=-1, keepdim=True)
+            # 构造一个形状为[batch_size, 1]全为eos或pad的tensor
+            eos_tensor = torch.LongTensor([[config.eos_index]] * batch_size).to(config.device)
+            pad_tensor = torch.LongTensor([[config.pad_index]] * batch_size).to(config.device)
+            # 如果整个batch全部预测的都是eos或pad，则结束循环
+            if eos_tensor.eq(decoder_input).all().item() or pad_tensor.eq(decoder_input).all().item():
+                break
+
         outputs = torch.stack(outputs, dim=0)
         return outputs
 
